@@ -1,0 +1,11 @@
+{
+  "targets": [
+    {
+      "id": "qingjian-macos-arm64",
+      "repository": "chenyukang/qingjian",
+      "branch": "main",
+      "runner": "macos-26",
+      "build_script": "builds/qingjian-macos-arm64.sh"
+    }
+  ]
+}

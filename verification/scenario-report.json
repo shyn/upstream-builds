@@ -1,0 +1,457 @@
+{
+  "scope": "local HTTP API scenario verification; no GitHub runner or real uploads",
+  "passed": 19,
+  "failed": 0,
+  "scenarios": [
+    {
+      "scenario": "first check requests build without modifying state",
+      "result": "PASS"
+    },
+    {
+      "scenario": "successful publication records SHA; unchanged SHA skips",
+      "result": "PASS"
+    },
+    {
+      "scenario": "manual force rebuilds unchanged SHA",
+      "result": "PASS"
+    },
+    {
+      "scenario": "changed upstream SHA requests build",
+      "result": "PASS"
+    },
+    {
+      "scenario": "build failure: when record is not invoked, next check retries",
+      "result": "PASS"
+    },
+    {
+      "scenario": "missing output: when record is not invoked, next check retries",
+      "result": "PASS"
+    },
+    {
+      "scenario": "artifact upload failure: when record is not invoked, next check retries",
+      "result": "PASS"
+    },
+    {
+      "scenario": "release failure: when record is not invoked, next check retries",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/heads/ HTTP 404 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/heads/ HTTP 403 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/heads/ HTTP 429 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/heads/ HTTP 500 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/tags/ HTTP 403 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "API /git/ref/tags/ HTTP 500 fails instead of silently skipping",
+      "result": "PASS"
+    },
+    {
+      "scenario": "state write failure keeps old success and remains retryable",
+      "result": "PASS"
+    },
+    {
+      "scenario": "retry success advances marker to new SHA",
+      "result": "PASS"
+    },
+    {
+      "scenario": "stale rerun cannot overwrite newer success",
+      "result": "PASS"
+    },
+    {
+      "scenario": "corrupt or mismatched marker fails closed",
+      "result": "PASS"
+    },
+    {
+      "scenario": "repository and branch changes use separate success markers",
+      "result": "PASS"
+    }
+  ],
+  "final_refs": {
+    "build-state-3cc0185fe9912bb57fea": "197b5bf575b7aa53d436d9206198b02ae66c14cb"
+  },
+  "api_calls": [
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "POST",
+      "path": "/repos/example/builder/git/tags",
+      "payload": {
+        "tag": "build-state-3cc0185fe9912bb57fea",
+        "message": "{\"repository\": \"chenyukang/qingjian\", \"branch\": \"main\", \"profile\": \"macos-arm64\", \"sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"run_url\": \"https://example.invalid/runs/1\", \"artifact_url\": \"https://example.invalid/artifacts/1\", \"recorded_at\": \"2026-10-08T04:29:05.330503+00:00\"}",
+        "object": "cccccccccccccccccccccccccccccccccccccccc",
+        "type": "commit"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/repos/example/builder/git/refs",
+      "payload": {
+        "ref": "refs/tags/build-state-3cc0185fe9912bb57fea",
+        "sha": "29999ba418911b9d4f900ae39a1c568c1ffbbe43"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "POST",
+      "path": "/repos/example/builder/git/tags",
+      "payload": {
+        "tag": "build-state-3cc0185fe9912bb57fea",
+        "message": "{\"repository\": \"chenyukang/qingjian\", \"branch\": \"main\", \"profile\": \"macos-arm64\", \"sha\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"run_url\": \"https://example.invalid/runs/1\", \"artifact_url\": \"https://example.invalid/artifacts/1\", \"recorded_at\": \"2026-10-08T04:29:06.104993+00:00\"}",
+        "object": "cccccccccccccccccccccccccccccccccccccccc",
+        "type": "commit"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/repos/example/builder/git/refs/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": {
+        "sha": "eac7fc380c42aa95affe3360391d31612d9300fa",
+        "force": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/29999ba418911b9d4f900ae39a1c568c1ffbbe43",
+      "payload": null
+    },
+    {
+      "method": "POST",
+      "path": "/repos/example/builder/git/tags",
+      "payload": {
+        "tag": "build-state-3cc0185fe9912bb57fea",
+        "message": "{\"repository\": \"chenyukang/qingjian\", \"branch\": \"main\", \"profile\": \"macos-arm64\", \"sha\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"run_url\": \"https://example.invalid/runs/1\", \"artifact_url\": \"https://example.invalid/artifacts/1\", \"recorded_at\": \"2026-10-08T04:29:06.219075+00:00\"}",
+        "object": "cccccccccccccccccccccccccccccccccccccccc",
+        "type": "commit"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/repos/example/builder/git/refs/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": {
+        "sha": "197b5bf575b7aa53d436d9206198b02ae66c14cb",
+        "force": true
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/197b5bf575b7aa53d436d9206198b02ae66c14cb",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/197b5bf575b7aa53d436d9206198b02ae66c14cb",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/197b5bf575b7aa53d436d9206198b02ae66c14cb",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/197b5bf575b7aa53d436d9206198b02ae66c14cb",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-531049a0fdfbab3a3a35",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/other",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-9ccbc99d769a56fada77",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/other/repo/git/ref/heads/main",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/ref/tags/build-state-3cc0185fe9912bb57fea",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/example/builder/git/tags/197b5bf575b7aa53d436d9206198b02ae66c14cb",
+      "payload": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/chenyukang/qingjian/git/ref/heads/main",
+      "payload": null
+    }
+  ]
+}

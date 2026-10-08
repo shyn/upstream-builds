@@ -1,0 +1,56 @@
+name: Build tracked upstreams
+
+on:
+  schedule:
+    # UTC 00:17 = 北京时间 / 新加坡时间 08:17
+    - cron: '17 0 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Target ID from upstreams.json, or all
+        type: string
+        default: all
+      force:
+        description: Rebuild even if the upstream SHA already succeeded
+        type: boolean
+        default: false
+      publish_release:
+        description: Also publish a GitHub prerelease for this build
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: plan
+        env:
+          SELECT_TARGET: ${{ inputs.target || 'all' }}
+        run: python3 .github/scripts/plan.py
+  build:
+    needs: plan
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    # Reusable workflow reduces this to read in check/build jobs.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-upstream.yml
+    with:
+      target_id: ${{ matrix.id }}
+      repository: ${{ matrix.repository }}
+      branch: ${{ matrix.branch }}
+      runner: ${{ matrix.runner }}
+      build_script: ${{ matrix.build_script }}
+      force: ${{ inputs.force || false }}
+      publish_release: ${{ inputs.publish_release || vars.PUBLISH_RELEASE == 'true' }}

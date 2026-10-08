@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/shyn/upstream-builds",
+  "status": "preparing-first-run",
+  "upstream": "chenyukang/qingjian",
+  "target": "qingjian-macos-arm64",
+  "real_runner_build": "pending",
+  "artifact_upload": "pending",
+  "release_publish": "pending",
+  "unchanged_sha_skip": "pending",
+  "application_installation": "not-run"
+}

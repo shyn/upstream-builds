@@ -1,0 +1,168 @@
+name: Build one upstream
+
+on:
+  workflow_call:
+    inputs:
+      target_id:
+        type: string
+        required: true
+      repository:
+        type: string
+        required: true
+      branch:
+        type: string
+        required: true
+      runner:
+        type: string
+        required: true
+      build_script:
+        type: string
+        required: true
+      force:
+        type: boolean
+        default: false
+      publish_release:
+        type: boolean
+        default: false
+
+concurrency:
+  group: upstream-${{ inputs.target_id }}
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_REPOSITORY: ${{ inputs.repository }}
+  UPSTREAM_BRANCH: ${{ inputs.branch }}
+  BUILD_PROFILE: ${{ inputs.target_id }}
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+      should_build: ${{ steps.check.outputs.should_build }}
+      state_object: ${{ steps.check.outputs.state_object }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Compare with last successful SHA
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE_BUILD: ${{ inputs.force }}
+        run: python3 .github/scripts/upstream.py check
+
+  build:
+    needs: check
+    if: needs.check.outputs.should_build == 'true'
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      artifact_name: ${{ steps.name.outputs.value }}
+      artifact_url: ${{ steps.upload.outputs.artifact-url }}
+    steps:
+      - name: Checkout builder helpers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: builder
+          persist-credentials: false
+      - name: Checkout exact upstream commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ needs.check.outputs.sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build and check package
+        working-directory: source
+        env:
+          BUILD_SCRIPT: ${{ inputs.build_script }}
+          ARTIFACT_DIR: ${{ runner.temp }}/publish
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR"
+          bash "$GITHUB_WORKSPACE/builder/$BUILD_SCRIPT"
+      - name: Add source, build receipt and checksums
+        env:
+          UPSTREAM_SHA: ${{ needs.check.outputs.sha }}
+          SOURCE_DIR: ${{ github.workspace }}/source
+          ARTIFACT_DIR: ${{ runner.temp }}/publish
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python3 builder/.github/scripts/package.py
+      - name: Choose unique artifact name
+        id: name
+        env:
+          UPSTREAM_SHA: ${{ needs.check.outputs.sha }}
+        run: echo "value=${BUILD_PROFILE}-${UPSTREAM_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+      - name: Upload output
+        id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ steps.name.outputs.value }}
+          path: ${{ runner.temp }}/publish/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+          include-hidden-files: true
+
+  publish:
+    needs: [check, build]
+    if: needs.check.outputs.should_build == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download output for release
+        if: inputs.publish_release
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: ${{ needs.build.outputs.artifact_name }}
+          path: release-files
+      - name: Verify and publish prerelease
+        if: inputs.publish_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          UPSTREAM_SHA: ${{ needs.check.outputs.sha }}
+        run: |
+          set -euo pipefail
+          cd release-files
+          sha256sum -c SHA256SUMS
+          tag="${BUILD_PROFILE}-${UPSTREAM_SHA:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          notes="$RUNNER_TEMP/release-notes.md"
+          printf 'Upstream: https://github.com/%s/commit/%s\n\nUnofficial development build: %s. See included build-info.json and SHA256SUMS.\n' \
+            "$UPSTREAM_REPOSITORY" "$UPSTREAM_SHA" "$BUILD_PROFILE" > "$notes"
+          gh release create "$tag" --target "$GITHUB_SHA" --draft --prerelease \
+            --title "$BUILD_PROFILE ${UPSTREAM_SHA:0:12}" --notes-file "$notes"
+          # Release assets are flat; preserve nested output in one extra archive.
+          assets=()
+          while IFS= read -r -d '' file; do assets+=("$file"); done < <(find . -maxdepth 1 -type f -print0)
+          if find . -mindepth 1 -type d -print -quit | grep -q .; then
+            bundle="$RUNNER_TEMP/${BUILD_PROFILE}-bundle.tar.gz"
+            tar -czf "$bundle" .
+            assets+=("$bundle")
+          fi
+          gh release upload "$tag" "${assets[@]}"
+          gh release edit "$tag" --draft=false --prerelease --latest=false
+      - name: Record success after all requested publishing completes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_SHA: ${{ needs.check.outputs.sha }}
+          EXPECTED_STATE: ${{ needs.check.outputs.state_object }}
+          ARTIFACT_URL: ${{ needs.build.outputs.artifact_url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python3 .github/scripts/upstream.py record

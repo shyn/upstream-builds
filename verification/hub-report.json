@@ -1,0 +1,51 @@
+{
+  "scope": "local manifest and packaging integration; no real runner or uploads",
+  "passed": 11,
+  "failed": 0,
+  "scenarios": [
+    {
+      "scenario": "one manifest dispatches multiple independent upstream targets",
+      "result": "PASS"
+    },
+    {
+      "scenario": "manual target selection dispatches exactly the selected target",
+      "result": "PASS"
+    },
+    {
+      "scenario": "unknown manual target fails",
+      "result": "PASS"
+    },
+    {
+      "scenario": "empty manifest fails during plan",
+      "result": "PASS"
+    },
+    {
+      "scenario": "duplicate IDs fails during plan",
+      "result": "PASS"
+    },
+    {
+      "scenario": "invalid repository fails during plan",
+      "result": "PASS"
+    },
+    {
+      "scenario": "missing build script fails during plan",
+      "result": "PASS"
+    },
+    {
+      "scenario": "path traversal fails during plan",
+      "result": "PASS"
+    },
+    {
+      "scenario": "empty build output is rejected before metadata is added",
+      "result": "PASS"
+    },
+    {
+      "scenario": "mismatched checkout SHA is rejected",
+      "result": "PASS"
+    },
+    {
+      "scenario": "real Git source archive, nested payload, receipt and checksums verify",
+      "result": "PASS"
+    }
+  ]
+}
