@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "scope": "downloaded package verification; not installed or launched",
+  "upstream_sha": "7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66",
+  "builder_sha": "96e1edaa36edd0ee38ae5a5d9568bd48e37991a4",
+  "package": "qingjian-0.1.5-dev-7d0014a-macos-arm64.pkg",
+  "package_sha256": "4f30b91dd0f2a1d49d6fc2b49a9b21153f6cf43cdefce258a9426f34468c0405",
+  "package_size": 144230808,
+  "architectures": "arm64",
+  "version": "0.1.5-dev-7d0014a",
+  "build_number": "331",
+  "codesign_verification": "PASS",
+  "product_data_bytes": {
+    "dict.qj": 3538648,
+    "models/hanzhang-zhiwei/hanzhang-zhiwei-small.qjm": 56044208,
+    "models/hanzhang-tongbian/hanzhang-tongbian-small.qjm": 46141208
+  },
+  "checksum_verified_files": [
+    "SIGNING.txt",
+    "build-info.json",
+    "data.lock",
+    "qingjian-0.1.5-dev-7d0014a-macos-arm64.pkg",
+    "source.tar.gz"
+  ]
+}

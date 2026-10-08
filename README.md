@@ -28,6 +28,8 @@ shasum -a 256 -c SHA256SUMS
 
 本仓库已设置 `PUBLISH_RELEASE=true`，定时构建也会发 Release。在 **Settings → Secrets and variables → Actions → Variables** 删除该变量或改为 `false` 可恢复仅上传 Artifact。无需 Secret。
 
+仓库变量开启时，手动 `publish_release=false` 不会覆盖它；如需关闭发布，应修改该变量。
+
 Artifact 保留 **30 天**，可修改共享 workflow 的 `retention-days`。Release 不自动清理，标签含目标 ID、上游短 SHA、运行 ID 和尝试次数；失败可能留下草稿。根目录文件直接作为附件，若输出含子目录，还附上保留目录结构的完整 bundle。
 
 ## 添加更多上游
@@ -101,5 +103,16 @@ actionlint -shellcheck= .github/workflows/*.yml
 ```
 
 第一组使用本地 HTTP 服务替代 GitHub API，覆盖成功状态、跳过、强制构建、错误响应和失败重试；第二组使用真实本地 Git 样例仓库验证清单计划和通用产物流程。两者不能替代真实 runner 打包、Artifact 上传及 Release 发布。实际验收运行链接与产物校验结果见 `verification/deployment.json`。
+
+当前已通过[真实构建与发布](https://github.com/shyn/upstream-builds/actions/runs/37728333545)及[相同 SHA 跳过检查](https://github.com/shyn/upstream-builds/actions/runs/37728952789)。下载后的安装包已复验为 arm64，应用签名、词库和两个模型齐全，所有附件与 GitHub 提供的 SHA-256 摘要一致；结果见 `verification/package-report.json`。未安装或启动输入法。
+
+macOS 上可复跑下载产物的检查：
+
+```bash
+gh run download 37728333545 --repo shyn/upstream-builds --dir downloaded
+python3 verification/inspect-macos-package.py \
+  downloaded/qingjian-macos-arm64-7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66-37728333545-1 \
+  7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66
+```
 
 参考：[上游打包流程](https://github.com/chenyukang/qingjian/blob/main/.github/workflows/release.yml)、[GitHub 定时事件](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)、[Artifact 保留设置](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)、[Git references API](https://docs.github.com/en/rest/git/refs)。

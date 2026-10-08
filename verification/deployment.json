@@ -1,11 +1,81 @@
 {
   "repository": "https://github.com/shyn/upstream-builds",
-  "status": "preparing-first-run",
+  "status": "verified",
+  "verified_at_utc": "2026-10-08T04:47:13.816695+00:00",
+  "default_branch": "main",
+  "visibility": "public",
+  "schedule": {
+    "cron_utc": "17 0 * * *",
+    "time_asia_singapore": "08:17 daily",
+    "publish_release_variable": "true"
+  },
   "upstream": "chenyukang/qingjian",
+  "branch": "main",
   "target": "qingjian-macos-arm64",
-  "real_runner_build": "pending",
-  "artifact_upload": "pending",
-  "release_publish": "pending",
-  "unchanged_sha_skip": "pending",
+  "upstream_sha": "7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66",
+  "tested_builder_sha": "96e1edaa36edd0ee38ae5a5d9568bd48e37991a4",
+  "successful_run": {
+    "id": 37728333545,
+    "url": "https://github.com/shyn/upstream-builds/actions/runs/37728333545",
+    "conclusion": "success"
+  },
+  "artifact": {
+    "id": 11529261083,
+    "url": "https://github.com/shyn/upstream-builds/actions/runs/37728333545/artifacts/11529261083",
+    "size_in_bytes": 163922816
+  },
+  "release": {
+    "tag": "qingjian-macos-arm64-7d0014ad1ae4-37728333545-1",
+    "url": "https://github.com/shyn/upstream-builds/releases/tag/qingjian-macos-arm64-7d0014ad1ae4-37728333545-1",
+    "draft": false,
+    "prerelease": true,
+    "all_downloaded_files_match_github_asset_digests": true
+  },
+  "success_marker": {
+    "tag": "build-state-71f03f1fb9e7e3e68a95",
+    "object_sha": "efa2c365a19cb8c76906d231827073e776ef6365",
+    "message": {
+      "repository": "chenyukang/qingjian",
+      "branch": "main",
+      "profile": "qingjian-macos-arm64",
+      "sha": "7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66",
+      "run_url": "https://github.com/shyn/upstream-builds/actions/runs/37728333545",
+      "artifact_url": "https://github.com/shyn/upstream-builds/actions/runs/37728333545/artifacts/11529261083",
+      "recorded_at": "2026-10-08T04:43:53.848873+00:00"
+    }
+  },
+  "unchanged_sha_run": {
+    "id": 37728952789,
+    "url": "https://github.com/shyn/upstream-builds/actions/runs/37728952789",
+    "conclusion": "success",
+    "should_build": false,
+    "build_job": "skipped",
+    "publish_job": "skipped"
+  },
+  "force_same_sha": {
+    "scope": "read-only check against real public GitHub state; no duplicate full compilation",
+    "should_build": true,
+    "sha": "7d0014ad1ae4d2c65ba0ea20f8051587e14dfd66"
+  },
+  "failure_retry": {
+    "failed_run": "https://github.com/shyn/upstream-builds/actions/runs/37727727260",
+    "cause": "incorrect lipo argument order in initial builder script; fixed",
+    "publish_job": "skipped",
+    "success_marker_after_failure": "absent",
+    "retry_force": false,
+    "retried_same_sha": true,
+    "retry_result": "success"
+  },
+  "local_verification": {
+    "state_scenarios_passed": 19,
+    "hub_scenarios_passed": 11,
+    "actionlint": "PASS",
+    "package_report": "verification/package-report.json"
+  },
+  "real_runner_build": "PASS",
+  "artifact_upload": "PASS",
+  "release_publish": "PASS",
+  "unchanged_sha_skip": "PASS",
+  "downloaded_package_verification": "PASS",
   "application_installation": "not-run"
 }
