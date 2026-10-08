@@ -26,7 +26,7 @@ shasum -a 256 -c SHA256SUMS
 
 青简还附带 `data.lock` 和签名状态说明。词库和模型由上游 `tools/release/data-fetch.sh` 从其指定的数据 Release 下载并按锁文件校验，Rust 版本取自被构建提交的 `rust-toolchain.toml`，Cargo 依赖由上游打包脚本通过 `--locked` 锁定。
 
-若希望定时构建也发 Release，在 **Settings → Secrets and variables → Actions → Variables** 中设置 `PUBLISH_RELEASE=true`。删除或改为 `false` 可恢复仅上传 Artifact。默认无需 Secret。
+本仓库已设置 `PUBLISH_RELEASE=true`，定时构建也会发 Release。在 **Settings → Secrets and variables → Actions → Variables** 删除该变量或改为 `false` 可恢复仅上传 Artifact。无需 Secret。
 
 Artifact 保留 **30 天**，可修改共享 workflow 的 `retention-days`。Release 不自动清理，标签含目标 ID、上游短 SHA、运行 ID 和尝试次数；失败可能留下草稿。根目录文件直接作为附件，若输出含子目录，还附上保留目录结构的完整 bundle。
 

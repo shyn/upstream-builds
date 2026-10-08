@@ -11,7 +11,7 @@ QINGJIAN_TARGET=aarch64-apple-darwin apps/macos/scripts/bundle.sh --pkg
 
 app=target/Qingjian.app
 codesign --verify --deep --strict "$app"
-lipo -verify_arch arm64 "$app/Contents/MacOS/qingjian-macos"
+lipo "$app/Contents/MacOS/qingjian-macos" -verify_arch arm64
 plutil -lint "$app/Contents/Info.plist"
 test -s "$app/Contents/Resources/dict.qj"
 test -s "$app/Contents/Resources/models/hanzhang-zhiwei/hanzhang-zhiwei-small.qjm"
